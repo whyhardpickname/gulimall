@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author markchern
  * @email 13zxchen3@gmail.com
- * @date 2021-10-04 06:49:57
+ * @date 2021-10-05 07:06:34
  */
 public interface CategoryBrandRelationService extends IService<CategoryBrandRelationEntity> {
 
