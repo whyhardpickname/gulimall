@@ -1,7 +1,11 @@
 package com.atguigu.gulimall.product.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,6 +28,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<CategoryEntity> listWithTree() {
+        List<CategoryEntity> entities = baseMapper.selectList(null);
+        List<CategoryEntity> level1Menu = entities.stream()
+                .filter((categoryEntity -> categoryEntity.getParentCid() == 0))
+                .collect(Collectors.toList());
+        return level1Menu;
     }
 
 }
