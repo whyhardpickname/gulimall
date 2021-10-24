@@ -7,11 +7,17 @@
 	<version>3.0.0</version>
 	<packaging>jar</packaging>
 	<description>renren-fast</description>
-
+<!--	<parent>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-parent</artifactId>-->
+<!--		<version>2.5.5</version>-->
+<!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+<!--	</parent>-->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.4.RELEASE</version>
+		<relativePath></relativePath>
 	</parent>
 
 	<properties>
@@ -237,6 +243,12 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>2.0.2</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -267,6 +279,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>wagon-maven-plugin</artifactId>
+<!--				<version></version>-->
 				<version>1.0</version>
 				<configuration>
 					<fromFile>target/${pack-name}</fromFile>
@@ -287,7 +300,8 @@
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.4.14</version>
+				<version>1.1.0</version>
+<!--				<version>0.4.14</version>-->
 				<!--<executions>-->
 					<!--<execution>-->
 						<!--<phase>package</phase>-->
