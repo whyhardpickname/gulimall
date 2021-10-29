@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 110.42.139.88:8848
+  application:
+    name: gulimall-third-party
+server:
+  port: 30000
