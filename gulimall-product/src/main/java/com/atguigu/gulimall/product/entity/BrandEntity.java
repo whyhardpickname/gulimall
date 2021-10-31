@@ -1,5 +1,8 @@
 package com.atguigu.gulimall.product.entity;
 
+import com.atguigu.common.valid.AddGroup;
+import com.atguigu.common.valid.ListValue;
+import com.atguigu.common.valid.UpdateGroup;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -25,18 +28,20 @@ public class BrandEntity implements Serializable {
 	/**
 	 * 品牌id
 	 */
+	@NotNull(message = "修改必需指定品牌ID", groups = {UpdateGroup.class})
+	@Null(message = "新增不必指定品牌ID", groups = {AddGroup.class})
 	@TableId
 	private Long brandId;
 	/**
 	 * 品牌名
 	 */
-	@NotBlank(message = "品牌名不能为空")
+	@NotBlank(message = "品牌名不能为空", groups = {UpdateGroup.class, AddGroup.class})
 	private String name;
 	/**
 	 * 品牌logo地址
 	 */
-	@NotEmpty
-	@URL(message = "logo必需为合法的URL地址")
+	@NotBlank(groups = {AddGroup.class})
+	@URL(message = "logo必需为合法的URL地址", groups = {UpdateGroup.class, AddGroup.class})
 	private String logo;
 	/**
 	 * 介绍
@@ -45,21 +50,22 @@ public class BrandEntity implements Serializable {
 	/**
 	 * 显示状态[0-不显示；1-显示]
 	 */
-	@Min(value = 0, message = "显示状态必需为0或1")
-	@Max(value = 1, message = "显示状态必需为0或1")
+//	@Min(value = 0, message = "显示状态必需为0或1")
+//	@Max(value = 1, message = "显示状态必需为0或1")
 //	@Pattern(regexp = "/^[0-1]$/", message = "显示状态必需为0或1")
+	@ListValue(vals = {0, 1}, groups = {AddGroup.class})
 	private Integer showStatus;
 	/**
 	 * 检索首字母
 	 */
-	@NotEmpty
-	@Pattern(regexp = "/^[a-zA-Z]$/", message = "检索首字母必需为单个字母")
+	@NotBlank(groups = {AddGroup.class})
+	@Pattern(regexp = "/^[a-zA-Z]$/", message = "检索首字母必需为单个字母", groups = {UpdateGroup.class, AddGroup.class})
 	private String firstLetter;
 	/**
 	 * 排序
 	 */
-	@NotNull
-	@Min(value = 0, message = "排序数值必需为非零整数")
+	@NotNull(groups = {AddGroup.class})
+	@Min(value = 0, message = "排序数值必需为非零整数", groups = {UpdateGroup.class, AddGroup.class})
 	private Integer sort;
 
 }
