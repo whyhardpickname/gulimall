@@ -6,6 +6,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
+import com.atguigu.common.utils.R;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,7 @@ public class OssController {
     String accessId;
 
     @RequestMapping(value = "/oss/policy")
-    public Map<String, String> policy() {
+    public R policy() {
 
 //        String accessId = "<yourAccessKeyId>"; // 请填写您的AccessKeyId。
 //        String accessKey = "<yourAccessKeySecret>"; // 请填写您的AccessKeySecret。
@@ -93,6 +94,6 @@ public class OssController {
         } finally {
             ossClient.shutdown();
         }
-        return respMap;
+        return R.ok().put("data", respMap);
     }
 }
