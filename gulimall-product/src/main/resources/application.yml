@@ -26,3 +26,6 @@ alibaba:
     secret-key: QXhy7VVPjURxbhD5y60m0D2y539NLY
     oss:
       endpoint: oss-cn-shenzhen.aliyuncs.com
+logging:
+  level:
+    com.atguigu.gulimall: debug
