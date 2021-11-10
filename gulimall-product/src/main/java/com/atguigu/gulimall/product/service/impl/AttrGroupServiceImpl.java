@@ -66,7 +66,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
     @Override
     public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsVosByCatelogId(Long catelogId) {
 
-
+        //TODO 获取分类下所有属性分组及其所有属性
         return null;
     }
 
