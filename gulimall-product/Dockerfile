@@ -10,4 +10,4 @@ ADD target/*.jar app.jar
 
 #启动容器时的进程
 #为了缩短 Tomcat 的启动时间，添加java.security.egd的系统属性指向/dev/urandom作为 ENTRYPOINT
-ENTRYPOINT ["java", "-Xmx100m","-Djava.security.egd=file:/dev/./urandom", "-jar","/app.jar"]
+ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=10001", "-Xmx100m","-Djava.security.egd=file:/dev/./urandom", "-jar","/app.jar"]
