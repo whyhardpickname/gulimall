@@ -139,6 +139,8 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                     skuImagesEntity.setImgUrl(image.getImgUrl());
                     skuImagesEntity.setDefaultImg(image.getDefaultImg());
                     return skuImagesEntity;
+                }).filter(skuImagesEntity -> {
+                    return !ObjectUtils.isEmpty(skuImagesEntity.getImgUrl());
                 }).collect(Collectors.toList());
                 skuImagesService.saveBatch(skuImagesEntities);
                 // 6.3 sku的销售属性信息
