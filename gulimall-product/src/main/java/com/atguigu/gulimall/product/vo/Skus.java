@@ -2,6 +2,7 @@
   * Copyright 2021 json.cn 
   */
 package com.atguigu.gulimall.product.vo;
+import com.atguigu.common.to.MemberPrice;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 

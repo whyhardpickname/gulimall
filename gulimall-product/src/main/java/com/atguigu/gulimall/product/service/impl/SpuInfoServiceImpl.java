@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -156,11 +157,12 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 SkuReductionTo skuReductionTo = new SkuReductionTo();
                 BeanUtils.copyProperties(sku, skuReductionTo);
                 skuReductionTo.setSkuId(skuId);
-                R r1 = couponFeignService.saveSkuReductions(skuReductionTo);
-                if (r1.getCode() != 0) {
-                    log.error("远程保存保存sku的优惠信息失败");
+                if (skuReductionTo.getFullCount() > 0 || skuReductionTo.getFullPrice().compareTo(BigDecimal.ZERO) == 1) {
+                    R r1 = couponFeignService.saveSkuReductions(skuReductionTo);
+                    if (r1.getCode() != 0) {
+                        log.error("远程保存保存sku的优惠信息失败");
+                    }
                 }
-
             });
 
 
