@@ -2,10 +2,14 @@ package com.atguigu.gulimall.ware.service.impl;
 
 import com.atguigu.common.constant.WareConstant;
 import com.atguigu.gulimall.ware.entity.PurchaseDetailEntity;
-import com.atguigu.gulimall.ware.mergeVo.MergeVo;
+import com.atguigu.gulimall.ware.service.WareSkuService;
+import com.atguigu.gulimall.ware.vo.MergeVo;
 import com.atguigu.gulimall.ware.service.PurchaseDetailService;
+import com.atguigu.gulimall.ware.vo.PurchaseDoneVo;
+import com.atguigu.gulimall.ware.vo.PurchaseItemDoneVo;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +34,9 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 
     @Resource
     private PurchaseDetailService purchaseDetailService;
+
+    @Resource
+    private WareSkuService wareSkuService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -111,12 +118,44 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
                     purchaseDetailService.listDetailByPurchaseId(purchaseEntity.getId());
             List<PurchaseDetailEntity> purchaseDetailEntityList = purchaseDetailEntities.stream().map(purchaseDetailEntity -> {
                 PurchaseDetailEntity purchaseDetailEntity1 = new PurchaseDetailEntity();
-                purchaseDetailEntity1.setId(purchaseDetailEntity1.getId());
+                purchaseDetailEntity1.setId(purchaseDetailEntity.getId());
                 purchaseDetailEntity1.setStatus(WareConstant.PurchaseDetailStatusEnum.PURCHASING.getCode());
                 return purchaseDetailEntity1;
             }).collect(Collectors.toList());
             purchaseDetailService.updateBatchById(purchaseDetailEntityList);
         });
+    }
+
+    @Transactional
+    @Override
+    public void done(PurchaseDoneVo purchaseDoneVo) {
+        //改变采购项的状态
+        boolean allItemsPurchaseSuccess = true;
+        List<PurchaseItemDoneVo> items = purchaseDoneVo.getItems();
+        List<PurchaseDetailEntity> purchaseDetailEntities = new ArrayList<>();
+        for (PurchaseItemDoneVo item : items) {
+            PurchaseDetailEntity purchaseDetailEntity = new PurchaseDetailEntity();
+            if (item.getStatus() == WareConstant.PurchaseDetailStatusEnum.ERROR.getCode()) {
+                allItemsPurchaseSuccess = false;
+                purchaseDetailEntity.setStatus(item.getStatus());
+            } else {
+                //入库成功采购项
+                purchaseDetailEntity.setStatus(WareConstant.PurchaseDetailStatusEnum.FINISHED.getCode());
+                PurchaseDetailEntity detailEntity = purchaseDetailService.getById(item.getItemId());
+                wareSkuService.addStock(detailEntity.getSkuId(), detailEntity.getWareId(), detailEntity.getSkuNum());
+            }
+            purchaseDetailEntity.setId(item.getItemId());
+            purchaseDetailEntities.add(purchaseDetailEntity);
+        }
+        purchaseDetailService.updateBatchById(purchaseDetailEntities);
+        //改变采购单状态
+        Long id = purchaseDoneVo.getId();
+        PurchaseEntity purchaseEntity = new PurchaseEntity();
+        purchaseEntity.setId(id);
+        purchaseEntity.setStatus(allItemsPurchaseSuccess ? WareConstant.PurchaseStatusEnum.FINISHED.getCode() :
+                WareConstant.PurchaseStatusEnum.ERROR.getCode());
+        purchaseEntity.setUpdateTime(new Date());
+        this.updateById(purchaseEntity);
     }
 
 }
