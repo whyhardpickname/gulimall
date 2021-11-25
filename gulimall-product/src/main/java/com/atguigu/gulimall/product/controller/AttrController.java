@@ -1,8 +1,11 @@
 package com.atguigu.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.atguigu.gulimall.product.entity.ProductAttrValueEntity;
+import com.atguigu.gulimall.product.service.ProductAttrValueService;
 import com.atguigu.gulimall.product.vo.AttrGroupRelationVo;
 import com.atguigu.gulimall.product.vo.AttrRespVo;
 import com.atguigu.gulimall.product.vo.AttrVo;
@@ -14,6 +17,7 @@ import com.atguigu.gulimall.product.service.AttrService;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -28,6 +32,25 @@ import com.atguigu.common.utils.R;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+
+    @Resource
+    private ProductAttrValueService productAttrValueService;
+
+    @PostMapping("/update/{spuId}")
+    //@RequiresPermissions("product:attr:update")
+    public R updateSpuAttr(@PathVariable("spuId") Long spuId,
+                           @RequestBody List<ProductAttrValueEntity> productAttrValueEntities){
+        productAttrValueService.updateSpuAttr(spuId, productAttrValueEntities);
+
+        return R.ok();
+    }
+
+    @RequestMapping("/base/listforspu/{spuId}")
+    //@RequiresPermissions("product:attr:list")
+    public R baseAttrListForSpu(@PathVariable("spuId") Long spuId){
+        List<ProductAttrValueEntity> productAttrValueEntities = productAttrValueService.baseAttrListForSpu(spuId);
+        return R.ok().put("data", productAttrValueEntities);
+    }
 
     @RequestMapping("/{attrType}/list/{catelogId}")
     //@RequiresPermissions("product:attr:list")
